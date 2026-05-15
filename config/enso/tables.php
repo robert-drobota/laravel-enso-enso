@@ -94,7 +94,7 @@ return [
         'global' => [
             'create' => [
                 'icon' => 'plus',
-                'class' => null,
+                'class' => 'is-dark',
                 'routeSuffix' => 'create',
                 'event' => 'create',
                 'action' => 'router',
@@ -130,7 +130,7 @@ return [
                 'action' => 'router',
             ],
             'edit' => [
-                'icon' => 'pencil-alt',
+                'icon' => 'pen',
                 'class' => 'is-row-button',
                 'routeSuffix' => 'edit',
                 'event' => 'edit',
@@ -143,7 +143,7 @@ return [
                 'event' => 'destroy',
                 'action' => 'ajax',
                 'method' => 'DELETE',
-                'message' => 'The selected record is about to be deleted. Are you sure?',
+                'message' => 'Are you sure?',
                 'confirmation' => true,
                 'postEvent' => 'destroyed',
             ],

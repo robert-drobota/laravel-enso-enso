@@ -1,9 +1,11 @@
-version: '3'
-
 services:
   php:
-    build: ./docker
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
     container_name: enso
+    restart: unless-stopped
+    working_dir: /var/www/html
     ports:
       - 8000:80
     volumes:
@@ -12,32 +14,43 @@ services:
     environment:
       DB_HOST: mysqldb
       REDIS_HOST: redis
+    env_file:
+      - .env
     depends_on:
-      - mysqldb
-      - redis
+      mysqldb:
+        condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - enso
 
   mysqldb:
     image: mysql:8
-    container_name: enso-${DB_CONNECTION}
+    container_name: enso-mysql
     restart: always
     env_file:
       - .env
     environment:
-      - MYSQL_DATABASE=${DB_DATABASE}
-      - MYSQL_USER=${DB_USERNAME}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: root
     ports:
       - 3306:3306
     volumes:
-      - /var/lib/mysql
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', '127.0.0.1', '-proot']
+      interval: 10s
+      timeout: 5s
+      retries: 10
     networks:
       - enso
 
   redis:
     image: redis:latest
+    container_name: enso-redis
+    restart: unless-stopped
     networks:
       - enso
 
@@ -55,3 +68,6 @@ services:
 
 networks:
   enso:
+
+volumes:
+  mysql_data:

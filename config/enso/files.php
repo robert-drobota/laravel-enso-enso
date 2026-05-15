@@ -15,8 +15,10 @@ use LaravelEnso\Webshop\Models\CarouselSlide;
 return [
     'linkExpiration' => (int) env('TEMPORARY_LINK_EXPIRATION', 60 * 60 * 24),
     'storageLimit' => 500000,
-    'paginate' => (int) env('FILES_PAGINATION', 50),
-    'testingFolder' => 'testing',
+    'paginate' => [20, 40, 60, 80, 100],
+    'testingFolder' => env('TEST_TOKEN')
+        ? 'testing-'.env('TEST_TOKEN')
+        : 'testing',
     'renameFolders' => [
         'dataImport' => 'import',
         'dataExport' => 'export',

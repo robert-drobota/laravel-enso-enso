@@ -23,42 +23,43 @@ jobs:
       SENTRY_URL: ${{ secrets.SENTRY_URL }}
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: borales/actions-yarn@v3.0.0
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: '16'
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: client/yarn.lock
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.5'
       - name: 'test node'
         run: node -v
       - name: 'install & build'
         run: |
           sudo composer install
-          sed -i 's/GOOGLE_ANALITICS_TOKEN/${{ secrets.GOOGLE_ANALITICS_TOKEN }}/g' resources/views/stubs/production-index.blade.stub
-          sudo cp -f resources/views/stubs/production-index.blade.stub vendor/laravel-enso/core/stubs
           cd client
           cp .env.example .env
           yarn install
           yarn build
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: resources
+          name: resources-${{ github.sha }}
+          if-no-files-found: error
+          include-hidden-files: true
           path: |
-            public/css/
-            public/js/
+            public/assets/
+            public/.vite/
             public/images/
             resources/views
 
   phpunit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.5'
       - name: 'PhpUnit'
         run: |
           sudo composer install
@@ -67,10 +68,10 @@ jobs:
   phpcpd:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.5'
       - name: 'Run Phpcpd'
         run: |
           sudo composer install
@@ -80,10 +81,10 @@ jobs:
   php-insights:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.5'
       - name: 'Run php-insight'
         run: |
           sudo composer install
@@ -92,10 +93,10 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.5'
       - name: 'Run php-insight'
         run: |
           PHP_SC_VERSION=$(curl -s "https://api.github.com/repos/fabpot/local-php-security-checker/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/;s/^v//')
@@ -122,10 +123,10 @@ jobs:
           --health-timeout=5s
           --health-retries=10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.5'
           tools: composer:v2
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
@@ -144,7 +145,7 @@ jobs:
     if: ${{ github.event_name == 'deployment' || github.event_name == 'push' }}
     needs: [phpunit, phpcpd, migration, yarn, security, php-insights]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
       - name: 'Trig envoyer'
         run: |
           curl ${{ secrets.DEPLOY_WEBHOOK }}

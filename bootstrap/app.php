@@ -40,9 +40,6 @@ return Application::configure(basePath: dirname(__DIR__))
         ->prependToGroup('api', [
             \LaravelEnso\Core\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         ])
-        ->appendToGroup('web', [
-            \LaravelEnso\ControlPanelApi\Http\Middleware\RequestMonitor::class,
-        ])
         ->priority([
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
@@ -50,7 +47,6 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Routing\Middleware\ThrottleRequests::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \Illuminate\Auth\Middleware\Authorize::class,
-            \LaravelEnso\ControlPanelApi\Http\Middleware\RequestMonitor::class,
         ]))
     ->withExceptions(fn (Exceptions $exceptions) => $exceptions
         ->dontReport([EnsoException::class])

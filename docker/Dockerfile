@@ -1,37 +1,36 @@
-FROM php:8.1-cli-bullseys
+FROM php:8.5-apache-bookworm
 
-# Apache configuration
-RUN a2enmod rewrite
-
-# Install dependencies
-RUN apt-get update \
-  && apt-get install -y zlib1g-dev libicu-dev wget gnupg g++ git openssh-client \
-  && apt-get install -y libxml2-dev libfreetype6-dev libpng-dev libjpeg-dev libzip-dev \
-  && apt-get install -y libpng-dev libfreetype6-dev libjpeg62-turbo-dev \
-  && apt-get install -y libmagickwand-dev unzip\
-  && docker-php-ext-configure intl \
-  && docker-php-ext-install intl pdo_mysql zip
-
-#Install Yarn
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-  && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 RUN apt-get update \
-  && apt-get install -y nodejs \
-  && apt-get install -y yarn
+  && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    git \
+    gnupg \
+    libfreetype6-dev \
+    libicu-dev \
+    libjpeg62-turbo-dev \
+    libmagickwand-dev \
+    libpng-dev \
+    libxml2-dev \
+    libzip-dev \
+    unzip \
+  && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+  && apt-get install -y --no-install-recommends nodejs \
+  && corepack enable \
+  && corepack prepare yarn@1.22.22 --activate \
+  && docker-php-ext-configure gd --with-freetype --with-jpeg \
+  && docker-php-ext-install -j"$(nproc)" bcmath gd intl pcntl pdo_mysql soap zip \
+  && pecl install imagick redis xdebug \
+  && docker-php-ext-enable imagick redis xdebug \
+  && printf "ServerName localhost\n" > /etc/apache2/conf-available/servername.conf \
+  && a2enconf servername \
+  && a2enmod rewrite \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
-# clean
-RUN rm -rf /var/cache/apk/*
+RUN curl -fsSL https://getcomposer.org/installer \
+  | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Install php extensions.
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install bcmath intl zip pcntl soap gd
-
-# Enable imagick
-RUN pecl install imagick && docker-php-ext-enable imagick
-
-# Install xdebug
-RUN pecl install xdebug && docker-php-ext-enable xdebug
-
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+WORKDIR /var/www/html

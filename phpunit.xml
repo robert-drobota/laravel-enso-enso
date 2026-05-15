@@ -6,17 +6,25 @@
             <directory suffix="Test.php">./vendor/laravel-enso/action-logger/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/addresses/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/calendar/tests</directory>
+            <directory suffix="Test.php">./vendor/laravel-enso/charts/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/comments/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/companies/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/core/tests</directory>
+            <directory suffix="Test.php">./vendor/laravel-enso/countries/tests</directory>
+            <directory suffix="Test.php">./vendor/laravel-enso/dynamic-methods/tests</directory>
+            <directory suffix="Test.php">./vendor/laravel-enso/excel/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/filters/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/forms/tests</directory>
+            <directory suffix="Test.php">./vendor/laravel-enso/google/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/helpers/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/history-tracker/tests</directory>
+            <directory suffix="Test.php">./vendor/laravel-enso/how-to/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/impersonate/tests</directory>
+            <directory suffix="Test.php">./vendor/laravel-enso/io/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/localisation/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/logs/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/menus/tests</directory>
+            <directory suffix="Test.php">./vendor/laravel-enso/migrator/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/notifications/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/people/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/permissions/tests</directory>
@@ -24,6 +32,8 @@
             <directory suffix="Test.php">./vendor/laravel-enso/roles/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/searchable/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/select/tests</directory>
+            <directory suffix="Test.php">./vendor/laravel-enso/sentry/tests</directory>
+            <directory suffix="Test.php">./vendor/laravel-enso/tasks/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/track-who/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/tutorials/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/users/tests</directory>
@@ -32,11 +42,12 @@
         <testsuite name="sync">
             <directory suffix="Test.php">./vendor/laravel-enso/avatars/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/cli/tests</directory>
+            <directory suffix="Test.php">./vendor/laravel-enso/data-export/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/data-import/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/documents/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/files/tests</directory>
-            <directory suffix="Test.php">./vendor/laravel-enso/upgrade/tests</directory>
             <directory suffix="Test.php">./vendor/laravel-enso/tables/tests</directory>
+            <directory suffix="Test.php">./vendor/laravel-enso/upgrade/tests</directory>
         </testsuite>
     </testsuites>
     <php>
